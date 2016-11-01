@@ -92,7 +92,7 @@ arma_stop_logic_error(const T1& x)
     }
   #endif
   
-  throw std::logic_error( std::string(x) );
+  //throw std::logic_error( std::string(x) );
   }
 
 

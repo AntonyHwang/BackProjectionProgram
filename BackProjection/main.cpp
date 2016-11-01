@@ -12,6 +12,10 @@ int cameraNum;
 int cameraCount = 0;
 int lineCount = 1;
 
+mat r1;
+mat r2;
+mat r3;
+
 const double imageCentreX = 540.0;
 const double imageCentreY = 960.0;
 
@@ -22,12 +26,12 @@ struct point2D {
 
 struct cameraInfo {
     double focalLen;
-    mat K;//IntrinsicMatrix
-    double T[1][3];//Translation
-    double C[1][3];//CameraPosition
-    double aR[1][3];//AxisAngleR
-    double qR[1][4];//QuaternionR
-    double R[3][3];//3x3R
+    mat K;//IntrinsicMatrix 3x3
+    vec T;//Translation 3x1
+    vec C;//CameraPosition 3x1
+    vec aR;//AxisAngleR 3x1
+    vec qR;//QuaternionR 4x1
+    mat R;//3x3R
     double rD;//RadialDistortion
     mat P;//CameraMatrix
     
@@ -38,9 +42,9 @@ cameraInfo camera [200];
 
 void initialiseK(){
     for (int i; i <200; i++) {
-            camera[i].K << 0 << 0 << imageCentreX << endr
-                        << 0 << 0 << imageCentreY << endr
-                        << 0 << 0 << 1;
+        camera[i].K << 0 << 0 << imageCentreX << endr
+                    << 0 << 0 << imageCentreY << endr
+                    << 0 << 0 << 1;
     }
 }
 
@@ -51,9 +55,10 @@ double stringToDouble(string s) {
 
 void readFile() {
     std::string line;
-    ifstream myfile ("cameras_v2.txt");
-    if (myfile.is_open()) {
-        while (getline(myfile, line)) {
+    ifstream camfile ("cameras_v2.txt");
+    string RMatrix;
+    if (camfile.is_open()) {
+        while (getline(camfile, line)) {
             if (lineCount == 3) {
                 //storing focal length
                 cameraCount++;
@@ -65,59 +70,50 @@ void readFile() {
             }
             else if (lineCount == 4) {
                 //storing Translation T
-                string x, y, z;
-                myfile >> x >> y >> z;
-                camera[cameraCount - 1].T[0][0] = stringToDouble(x);
-                camera[cameraCount - 1].T[0][1] = stringToDouble(y);
-                camera[cameraCount - 1].T[0][2] = stringToDouble(z);
+                double x, y, z;
+                camfile >> x >> y >> z;
+                camera[cameraCount - 1].T << x << endr << y << endr << z;
                 //cout << "T: " << T [cameraCount - 1][0][0] << " " << T [cameraCount - 1][0][1] << " " << T [cameraCount - 1][0][2] << "\n";
+                //cout << camera[cameraCount - 1].T << "\n";
             }
             else if (lineCount == 5) {
                 //storing Camera position C
-                string x, y, z;
-                myfile >> x >> y >> z;
-                camera[cameraCount - 1].C[0][0] = stringToDouble(x);
-                camera[cameraCount - 1].C[0][1] = stringToDouble(y);
-                camera[cameraCount - 1].C[0][2] = stringToDouble(z);
+                double x1, y1, z1;
+                camfile >> x1 >> y1 >> z1;
+                camera[cameraCount - 1].C << x1 << endr << y1 << endr << z1;
                 //cout << "C: " << C [cameraCount - 1][0][0] << " " << C [cameraCount - 1][0][1] << " " << C [cameraCount - 1][0][2] << "\n";
             }
             else if (lineCount == 6) {
                 //storing Axis angle format of R
-                string x, y, z;
-                myfile >> x >> y >> z;
-                camera[cameraCount - 1].aR[0][0] = stringToDouble(x);
-                camera[cameraCount - 1].aR[0][1] = stringToDouble(y);
-                camera[cameraCount - 1].aR[0][2] = stringToDouble(z);
+                double x, y, z;
+                camfile >> x >> y >> z;
+                camera[cameraCount - 1].aR << x << endr << y << endr << z;
                 //cout << "aR: " << aR [cameraCount - 1][0][0] << " " << aR [cameraCount - 1][0][1] << " " << aR [cameraCount - 1][0][2] << "\n";
             }
             else if (lineCount == 7) {
                 //storign Quaternion format of R
-                string x, y, z, w;
-                myfile >> x >> y >> z >> w;
-                camera[cameraCount - 1].qR[0][0] = stringToDouble(x);
-                camera[cameraCount - 1].qR[0][1] = stringToDouble(y);
-                camera[cameraCount - 1].qR[0][2] = stringToDouble(z);
-                camera[cameraCount - 1].qR[0][3] = stringToDouble(w);
+                double x, y, z, t;
+                camfile >> x >> y >> z >> t;
+                camera[cameraCount - 1].qR << x << endr << y << endr << z << endr << t;
                 //cout << "qR: " << qR [cameraCount - 1][0][0] << " " << qR [cameraCount - 1][0][1] << " " << qR [cameraCount - 1][0][2] << " " << qR [cameraCount - 1][0][3] << "\n";
             }
-            else if (lineCount == 8 || lineCount == 9 || lineCount == 10) {
+            else if (lineCount == 8) {
                 //storing Matrix format of R
-                int row;
-                if (lineCount == 8) {
-                    row = 0;
-                }
-                else if ( lineCount == 9) {
-                    row = 1;
-                }
-                else {
-                    row = 2;
-                }
-                string x, y, z;
-                myfile >> x >> y >> z;
-                camera[cameraCount - 1].R[row][0] = stringToDouble(x);
-                camera[cameraCount - 1].R[row][1] = stringToDouble(y);
-                camera[cameraCount - 1].R[row][2] = stringToDouble(z);
-                //cout << "R: " << R [cameraCount - 1][row][0] << " " << R [cameraCount - 1][row][1] << " " << R [cameraCount - 1][row][2] << "\n";
+                double x1, x2, x3;
+                camfile >> x1 >> x2 >> x3;
+                r1 << x1 << x2 << x3;
+            }
+            else if (lineCount == 9) {
+                double y1, y2, y3;
+                camfile >> y1 >> y2 >> y3;
+                r2 << y1 << y2 << y3;
+                r3 = join_cols(r1, r2);
+            }
+            else if (lineCount == 10) {
+                double z1, z2, z3;
+                camfile >> z1 >> z2 >> z3;
+                r2 << z1 << z2 << z3;
+                camera[cameraCount - 1].R = join_cols(r3, r2);
             }
             else if (lineCount == 12) {
                 //storing Normalized radial distortion
@@ -129,8 +125,8 @@ void readFile() {
                 lineCount = 1;
             }
             lineCount++;
-            if (myfile.eof()) {
-                myfile.close();
+            if (camfile.eof()) {
+                camfile.close();
             }
         }
     }
@@ -150,10 +146,8 @@ string getFileName(int cameraNum) {
 
 void readPFiles() {
     for (int currentCamera = 0; currentCamera < cameraCount; currentCamera++) {
-        lineCount = 0;
         std::string line;
         ifstream pfile (getFileName(currentCamera));
-        //cout << "\n";
         if (pfile.is_open()) {
             while (pfile >> line) {
                     double x1, x2, x3, x4,
@@ -168,15 +162,6 @@ void readPFiles() {
                     camera[currentCamera].P << x1 << x2 << x3 << x4 << endr
                                             << y1 << y2 << y3 << y4 << endr
                                             << z1 << z2 << z3 << z4;
-
-                    //camera[currentCamera].P[lineCount - 1][0] = stringToDouble(x);
-                    //camera[currentCamera].P[lineCount - 1][1] = stringToDouble(y);
-                    //camera[currentCamera].P[lineCount - 1][2] = stringToDouble(z);
-                    //camera[currentCamera].P[lineCount - 1][3] = stringToDouble(w);
-                    //cout << camera[currentCamera].P[lineCount - 1][0] << " " << camera[currentCamera].P[lineCount - 1][1] << " " << camera[currentCamera].P[lineCount - 1][2]<< " " << camera[currentCamera].P[lineCount - 1][3] << "\n";
-                    //cout << camera[currentCamera].P << "\n";
-
-                //lineCount++;
             }
             pfile.close();
             //cout << camera[currentCamera].P << "\n";
@@ -194,6 +179,7 @@ int main () {
     initialiseK();
     readFile();
     readPFiles();
+    //cout << camera[0].R << "\n";
     calculate2DPoint();
     
     return 0;
