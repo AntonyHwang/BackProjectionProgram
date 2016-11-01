@@ -207,19 +207,19 @@ void readPatchFile() {
             while (getline(patchfile, line)) {
                 patchfile >> word;
                 if (word == "PATCHS") {
-                    lineCount = 1;
+                    lineCount = 2;
                 }
-                else if (lineCount == 1) {
+                else if (lineCount == 3) {
                     double x, y, z;
                     patchfile >> x >> y >> z;
                     point_3D << stringToDouble(word) << x << y << z;
                     cout << fileName << "\n";
                     cout << point_3D << "\n";
-                    lineCount++;
                 }
-                else if (lineCount == 5) {
+                else if (lineCount == 7) {
                     
                 }
+                lineCount++;
                 if (patchfile.eof()) {
                     patchfile.close();
                     currentFile++;
