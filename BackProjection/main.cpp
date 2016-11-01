@@ -3,7 +3,9 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <armadillo>
 
+using namespace arma;
 using namespace std;
 
 int cameraNum;
@@ -20,14 +22,14 @@ struct point2D {
 
 struct cameraInfo {
     double focalLen;
-    double K[3][3];//IntrinsicMatrix
+    mat K;//IntrinsicMatrix
     double T[1][3];//Translation
     double C[1][3];//CameraPosition
     double aR[1][3];//AxisAngleR
     double qR[1][4];//QuaternionR
     double R[3][3];//3x3R
     double rD;//RadialDistortion
-    double P[3][4];//CameraMatrix
+    mat P;//CameraMatrix
     
     point2D cameraPoint [200];//2D points
 };
@@ -36,15 +38,9 @@ cameraInfo camera [200];
 
 void initialiseK(){
     for (int i; i <200; i++) {
-            camera[i].K[0][0] = 0.0;
-            camera[i].K[0][1] = 0.0;
-            camera[i].K[0][2] = imageCentreX;
-            camera[i].K[1][0] = 0.0;
-            camera[i].K[1][1] = 0.0;
-            camera[i].K[1][2] = imageCentreY;
-            camera[i].K[2][0] = 0.0;
-            camera[i].K[2][1] = 0.0;
-            camera[i].K[2][2] = 1.0;
+            camera[i].K << 0 << 0 << imageCentreX << endr
+                        << 0 << 0 << imageCentreY << endr
+                        << 0 << 0 << 1;
     }
 }
 
@@ -63,8 +59,8 @@ void readFile() {
                 cameraCount++;
                 //cout << "\n" << "Storing camera " << cameraCount << "\n";
                 camera[cameraCount - 1].focalLen = stringToDouble(line);
-                camera[cameraCount - 1].K[0][0] = camera[cameraCount - 1].focalLen;
-                camera[cameraCount - 1].K[1][1] = camera[cameraCount - 1].focalLen;
+                camera[cameraCount - 1].K(1,1) = camera[cameraCount - 1].focalLen;
+                camera[cameraCount - 1].K(2,2) = camera[cameraCount - 1].focalLen;
                 //cout << "FocalLen: " << focalLen [cameraCount - 1] << "\n";
             }
             else if (lineCount == 4) {
@@ -157,24 +153,33 @@ void readPFiles() {
         lineCount = 0;
         std::string line;
         ifstream pfile (getFileName(currentCamera));
-        cout << "\n";
+        //cout << "\n";
         if (pfile.is_open()) {
-            while (getline(pfile, line)) {
-                if (lineCount < 3) {
-                    string x, y, z, w;
-                    pfile >> x >> y >> z >> w;
+            while (pfile >> line) {
+                    double x1, x2, x3, x4,
+                           y1, y2, y3, y4,
+                           z1, z2, z3, z4;
+                    
+                    pfile >> x1 >> x2 >> x3 >> x4
+                          >> y1 >> y2 >> y3 >> y4
+                          >> z1 >> z2 >> z3 >> z4;
                     //cout << "\n" << lineCount << "\n";
-                    camera[currentCamera].P[lineCount - 1][0] = stringToDouble(x);
-                    camera[currentCamera].P[lineCount - 1][1] = stringToDouble(y);
-                    camera[currentCamera].P[lineCount - 1][2] = stringToDouble(z);
-                    camera[currentCamera].P[lineCount - 1][3] = stringToDouble(w);
-                    cout << camera[currentCamera].P[lineCount - 1][0] << " " << camera[currentCamera].P[lineCount - 1][1] << " " << camera[currentCamera].P[lineCount - 1][2]<< " " << camera[currentCamera].P[lineCount - 1][3] << "\n";
-                }
-                lineCount++;
+                    
+                    camera[currentCamera].P << x1 << x2 << x3 << x4 << endr
+                                            << y1 << y2 << y3 << y4 << endr
+                                            << z1 << z2 << z3 << z4;
+
+                    //camera[currentCamera].P[lineCount - 1][0] = stringToDouble(x);
+                    //camera[currentCamera].P[lineCount - 1][1] = stringToDouble(y);
+                    //camera[currentCamera].P[lineCount - 1][2] = stringToDouble(z);
+                    //camera[currentCamera].P[lineCount - 1][3] = stringToDouble(w);
+                    //cout << camera[currentCamera].P[lineCount - 1][0] << " " << camera[currentCamera].P[lineCount - 1][1] << " " << camera[currentCamera].P[lineCount - 1][2]<< " " << camera[currentCamera].P[lineCount - 1][3] << "\n";
+                    //cout << camera[currentCamera].P << "\n";
+
+                //lineCount++;
             }
-            if (pfile.eof()) {
-                pfile.close();
-            }
+            pfile.close();
+            //cout << camera[currentCamera].P << "\n";
         }
         else cout << "Unable to open file";
     }
