@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BackProjection/main.cpp"
-            timestampString = "499702427.023227"
+            timestampString = "499735701.094303"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
+            startingLineNumber = "238"
+            endingLineNumber = "238"
             landmarkName = "main ()"
             landmarkType = "9">
          </BreakpointContent>
@@ -54,11 +54,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BackProjection/main.cpp"
-            timestampString = "499702427.023227"
+            timestampString = "499735701.094303"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
             landmarkName = "main ()"
             landmarkType = "9">
          </BreakpointContent>
@@ -70,11 +70,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BackProjection/main.cpp"
-            timestampString = "499702427.023227"
+            timestampString = "499729803.731283"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
             landmarkName = "stringToDouble(string s)"
             landmarkType = "9">
          </BreakpointContent>
@@ -86,11 +86,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BackProjection/main.cpp"
-            timestampString = "499702427.023227"
+            timestampString = "499729803.731283"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "readFile()"
             landmarkType = "9">
          </BreakpointContent>
