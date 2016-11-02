@@ -8,13 +8,16 @@
 using namespace arma;
 using namespace std;
 
+const int MAX_CAM_NUM = 200;
+const int MAX_2D_POINTS = 500;
+
 int cameraNum;
 int cameraCount = 0;
 int lineCount = 1;
 
 struct point2D {
-    double x;
-    double y;
+    double x = 0;
+    double y = 0;
 };
 
 struct point3D {
@@ -34,15 +37,15 @@ struct cameraInfo {
     double rD;//RadialDistortion
     mat P;//CameraMatrix
     
-    point2D cameraPoint [200];//2D points
+    point2D image2DPoint [MAX_2D_POINTS];//2D points
 };
 
-cameraInfo camera [200];
+cameraInfo camera [MAX_CAM_NUM];
 
 void initialiseK(){
     double imageCentreX = 540.0;
     double imageCentreY = 960.0;
-    for (int i; i <200; i++) {
+    for (int i; i < MAX_CAM_NUM; i++) {
         camera[i].K << 0 << 0 << imageCentreX << endr
                     << 0 << 0 << imageCentreY << endr
                     << 0 << 0 << 1;
@@ -191,11 +194,19 @@ void readPFiles() {
     }
 }
 
-void store2DPoint(vec point_2D) {
-    
+void store2DPoint (int camIndex, double x, double y){
+    int emptyIndex = 0;
+    for (int i = 0; i < MAX_2D_POINTS; i++) {
+        if (camera[camIndex].image2DPoint[i].x == 0 && camera[camIndex].image2DPoint[i].y == 0) {
+            emptyIndex = i;
+            i = MAX_2D_POINTS;
+        }
+    }
+    camera[camIndex].image2DPoint[emptyIndex].x = x;
+    camera[camIndex].image2DPoint[emptyIndex].x = y;
 }
 
-vec calculate2DPoint(int index, vec point_3D){
+void calculate2DPoint(int index, vec point_3D){
     //calculate points
     mat point_2D;
     double x;
@@ -210,7 +221,7 @@ vec calculate2DPoint(int index, vec point_3D){
     y = point_2D(1, 0) / (point_2D(2, 0));
     cout << x << "\n";
     cout << y << "\n";
-    return point_2D;
+    store2DPoint(index - 1, x, y);
 }
 
 void readPatchFile() {
