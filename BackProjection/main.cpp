@@ -216,20 +216,22 @@ void calculate2DPoint(int index, vec point_3D){
     //cout << index << "\n";
     //cout << camera[index - 1].P << "\n";
     //cout << point_3D << "\n";
-    cout << point_2D << "\n";
+    //cout << point_2D << "\n";
     x = point_2D(0, 0) / (point_2D(2, 0));
     y = point_2D(1, 0) / (point_2D(2, 0));
-    cout << x << "\n";
-    cout << y << "\n";
+    //cout << x << "\n";
+    //cout << y << "\n";
+    cout << "X: " << x << "  Y: " << y << "\n";
     store2DPoint(index - 1, x, y);
 }
 
 void readPatchFile() {
     std::string line;
     std::string firstWord;
+    int pointNum = 0;
     int currentFile = 0;
     string fileName;
-    vec point_3D;
+    mat point_3D;
     lineCount = 0;
     while (fileName != "file not exist") {
         fileName = getFileName("Patch", currentFile);
@@ -245,13 +247,21 @@ void readPatchFile() {
                     double y, z, t;
                     patchfile >> y >> z >> t;
                     point_3D << x << endr << y << endr << z << endr << t;
-                    //cout << fileName << "\n";
-                    //cout << point_3D << "\n";
                 }
                 else if (lineCount == 7) {
-                    std::string index = "start";
                     calculate2DPoint(stringToDouble(firstWord), point_3D);
-                    //cout << firstWord << "\n";
+                    getline(patchfile, line);
+                    std::stringstream stream(line);
+                    while(1) {
+                        int n;
+                        stream >> n;
+                        if(!stream)
+                            break;
+                        calculate2DPoint(n, point_3D);
+                        //std::cout << "Found integer: " << n << "\n";
+                    }
+                    pointNum++;
+                    cout << pointNum << " 3D points calculation complete\n";
                 }
                 //cout << "\n";
                 lineCount++;
@@ -262,6 +272,7 @@ void readPatchFile() {
             }
         }
     }
+    cout << "\nAll the calculations completed\n";
 }
 
 int main () {
