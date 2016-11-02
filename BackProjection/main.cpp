@@ -12,13 +12,6 @@ int cameraNum;
 int cameraCount = 0;
 int lineCount = 1;
 
-mat r1;
-mat r2;
-mat r3;
-
-const double imageCentreX = 540.0;
-const double imageCentreY = 960.0;
-
 struct point2D {
     double x;
     double y;
@@ -47,6 +40,8 @@ struct cameraInfo {
 cameraInfo camera [200];
 
 void initialiseK(){
+    double imageCentreX = 540.0;
+    double imageCentreY = 960.0;
     for (int i; i <200; i++) {
         camera[i].K << 0 << 0 << imageCentreX << endr
                     << 0 << 0 << imageCentreY << endr
@@ -63,6 +58,9 @@ void readFile() {
     std::string line;
     ifstream camfile ("cameras_v2.txt");
     string RMatrix;
+    mat r1;
+    mat r2;
+    mat r3;
     if (camfile.is_open()) {
         while (getline(camfile, line)) {
             if (lineCount == 3) {
@@ -200,12 +198,18 @@ void store2DPoint(vec point_2D) {
 vec calculate2DPoint(int index, vec point_3D){
     //calculate points
     mat point_2D;
+    double x;
+    double y;
     point_2D = camera[index - 1].P * point_3D;
     //spoint_2D << 1;
     //cout << index << "\n";
     //cout << camera[index - 1].P << "\n";
     //cout << point_3D << "\n";
     cout << point_2D << "\n";
+    x = point_2D(0, 0) / (point_2D(2, 0));
+    y = point_2D(1, 0) / (point_2D(2, 0));
+    cout << x << "\n";
+    cout << y << "\n";
     return point_2D;
 }
 
