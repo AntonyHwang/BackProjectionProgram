@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C2A1B5261DBE12B400A8ED0C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C2A1B5251DBE12B400A8ED0C /* main.cpp */; };
+		C2AD1D301DCA17310006719F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2AD1D2F1DCA17310006719F /* Accelerate.framework */; };
+		C2AD1D321DCA173B0006719F /* libz.1.2.8.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2AD1D311DCA173B0006719F /* libz.1.2.8.tbd */; };
+		C2AD1D341DCA17410006719F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2AD1D331DCA17410006719F /* libz.tbd */; };
+		C2AD1D361DCA17A00006719F /* armadillo in Frameworks */ = {isa = PBXBuildFile; fileRef = C2AD1D351DCA17A00006719F /* armadillo */; };
+		C2AD1D381DCA17F10006719F /* libarmadillo.7.50.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C2AD1D371DCA17F10006719F /* libarmadillo.7.50.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,11 @@
 /* Begin PBXFileReference section */
 		C2A1B5221DBE12B400A8ED0C /* BackProjection */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BackProjection; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2A1B5251DBE12B400A8ED0C /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		C2AD1D2F1DCA17310006719F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		C2AD1D311DCA173B0006719F /* libz.1.2.8.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.8.tbd; path = usr/lib/libz.1.2.8.tbd; sourceTree = SDKROOT; };
+		C2AD1D331DCA17410006719F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		C2AD1D351DCA17A00006719F /* armadillo */ = {isa = PBXFileReference; lastKnownFileType = text; name = armadillo; path = BackProjection/armadillo; sourceTree = "<group>"; };
+		C2AD1D371DCA17F10006719F /* libarmadillo.7.50.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libarmadillo.7.50.0.dylib; path = BackProjection/blah/libarmadillo.7.50.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +42,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2AD1D381DCA17F10006719F /* libarmadillo.7.50.0.dylib in Frameworks */,
+				C2AD1D361DCA17A00006719F /* armadillo in Frameworks */,
+				C2AD1D341DCA17410006719F /* libz.tbd in Frameworks */,
+				C2AD1D321DCA173B0006719F /* libz.1.2.8.tbd in Frameworks */,
+				C2AD1D301DCA17310006719F /* Accelerate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -43,6 +58,7 @@
 			children = (
 				C2A1B5241DBE12B400A8ED0C /* BackProjection */,
 				C2A1B5231DBE12B400A8ED0C /* Products */,
+				C2AD1D2E1DCA17310006719F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +76,18 @@
 				C2A1B5251DBE12B400A8ED0C /* main.cpp */,
 			);
 			path = BackProjection;
+			sourceTree = "<group>";
+		};
+		C2AD1D2E1DCA17310006719F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C2AD1D371DCA17F10006719F /* libarmadillo.7.50.0.dylib */,
+				C2AD1D351DCA17A00006719F /* armadillo */,
+				C2AD1D331DCA17410006719F /* libz.tbd */,
+				C2AD1D311DCA173B0006719F /* libz.1.2.8.tbd */,
+				C2AD1D2F1DCA17310006719F /* Accelerate.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,6 +194,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/armadillo_bits\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/include/armadillo_bits\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -207,6 +237,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include/armadillo_bits\"";
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/include/armadillo_bits\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -216,8 +248,11 @@
 		C2A1B52A1DBE12B400A8ED0C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/BackProjection/armadillo_bits\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/BackProjection\"",
+					"$(PROJECT_DIR)/BackProjection/blah",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -225,8 +260,11 @@
 		C2A1B52B1DBE12B400A8ED0C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
-				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/BackProjection/armadillo_bits\"";
+				LIBRARY_SEARCH_PATHS = (
+					"\"$(SRCROOT)/BackProjection\"",
+					"$(PROJECT_DIR)/BackProjection/blah",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

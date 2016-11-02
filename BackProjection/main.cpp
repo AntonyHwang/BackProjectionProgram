@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <armadillo>
+#include "armadillo"
 
 using namespace arma;
 using namespace std;
@@ -33,10 +33,10 @@ struct point3D {
 struct cameraInfo {
     double focalLen;
     mat K;//IntrinsicMatrix 3x3
-    vec T;//Translation 3x1
-    vec C;//CameraPosition 3x1
-    vec aR;//AxisAngleR 3x1
-    vec qR;//QuaternionR 4x1
+    mat T;//Translation 3x1
+    mat C;//CameraPosition 3x1
+    mat aR;//AxisAngleR 3x1
+    mat qR;//QuaternionR 4x1
     mat R;//3x3R
     double rD;//RadialDistortion
     mat P;//CameraMatrix
@@ -193,9 +193,25 @@ void readPFiles() {
     }
 }
 
+void store2DPoint(vec point_2D) {
+    
+}
+
+vec calculate2DPoint(int index, vec point_3D){
+    //calculate points
+    mat point_2D;
+    point_2D = camera[index - 1].P * point_3D;
+    //spoint_2D << 1;
+    //cout << index << "\n";
+    //cout << camera[index - 1].P << "\n";
+    //cout << point_3D << "\n";
+    cout << point_2D << "\n";
+    return point_2D;
+}
+
 void readPatchFile() {
     std::string line;
-    std::string word;
+    std::string firstWord;
     int currentFile = 0;
     string fileName;
     vec point_3D;
@@ -205,20 +221,24 @@ void readPatchFile() {
         ifstream patchfile (fileName);
         if (patchfile.is_open()) {
             while (getline(patchfile, line)) {
-                patchfile >> word;
-                if (word == "PATCHS") {
+                patchfile >> firstWord;
+                if (firstWord == "PATCHS") {
                     lineCount = 2;
                 }
                 else if (lineCount == 3) {
-                    double x, y, z;
-                    patchfile >> x >> y >> z;
-                    point_3D << stringToDouble(word) << x << y << z;
-                    cout << fileName << "\n";
-                    cout << point_3D << "\n";
+                    double x = stringToDouble(firstWord);
+                    double y, z, t;
+                    patchfile >> y >> z >> t;
+                    point_3D << x << endr << y << endr << z << endr << t;
+                    //cout << fileName << "\n";
+                    //cout << point_3D << "\n";
                 }
                 else if (lineCount == 7) {
-                    
+                    std::string index = "start";
+                    calculate2DPoint(stringToDouble(firstWord), point_3D);
+                    //cout << firstWord << "\n";
                 }
+                //cout << "\n";
                 lineCount++;
                 if (patchfile.eof()) {
                     patchfile.close();
@@ -229,19 +249,12 @@ void readPatchFile() {
     }
 }
 
-
-void calculate2DPoint(){
-    //calculate points
-}
-
-
 int main () {
     initialiseK();
     readFile();//contains camera information
     readPFiles();//contains the camera matrix of each camera
     readPatchFile();//contains the the 3D coordinates
     //cout << camera[0].R << "\n";
-    calculate2DPoint();
     
     return 0;
 }
